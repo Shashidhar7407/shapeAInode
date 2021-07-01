@@ -153,10 +153,37 @@ Method          POST
 shapeAI.post("/author/new", async (req, res) => {
   const { newAuthor } = req.body;
 
-  Authormodel = create(newAuthor);
+  const addNewAuthor = AuthorModel.create(newAuthor);
   // database.authors.push(newAuthor);
   return res.json({ authors: database.authors, message: "author was added!" });
 });
+
+// publication new
+
+shapeAI.post("/publication/new", async (req, res) => {
+  const { newPublication } = req.body;
+
+  const addNewPublication = PublicationModel.create(newPublication);
+  return res.json({
+    publications: database.publications,
+    message: "new publication is assigned!",
+  });
+});
+
+//bookname based on author
+shapeAI.get("/book/author/:id", async (req, res) => {
+  const getSpecificBook = database.book.filter(
+    book.author.includes(parseInt(req.params.id))
+  );
+
+  if (getSpecificBook.length === 0) {
+    return res.json({ error: "no book found for the author ${req.params.id}" });
+  } else {
+    return res.json({ book: getSpecificBook });
+  }
+});
+
+//update book title
 
 /*
 Route           /book/update
@@ -321,7 +348,7 @@ shapeAI.delete("/publication/delete/book/:isbn/:pubId", (req, res) => {
   });
 });
 
-shapeAI.listen(3000, () => console.log("Server running!!😎"));
+shapeAI.listen(3400, () => console.log("Server running!!😎"));
 
 // Talk to mongodb in which mongodb understands => ******
 // talk to us in the way we understand => JavaScript
